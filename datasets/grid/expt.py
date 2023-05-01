@@ -198,24 +198,24 @@ def accExpt(prog,trainData,testData,n,maxD,epochs):
     return result
 
 def xc_accExpt(prog,trainData,testData,n,maxD,epochs):
-	results = {}
-        for compilerClass in CROSSCOMPILERS:
-            
-            xc = compilerClass(prog)
-            print(expt.fulltype(xc))
-            # compile everything
-            for mode in trainData.modesToLearn():
-              xc.ensureCompiled(mode)
-            learner = CROSSLEARNERS[compilerClass](prog,xc)
-            
-            params = {'prog':prog,
-                      'trainData':trainData, 'testData':testData,
-                      'savedTestPredictions':'tmp-cache/test.%s.solutions.txt' % expt.fulltype(xc),
-                      'learner':learner,
-            }
-            
-            results[expt.fulltype(xc)] = expt.Expt(params).run()
-	return results
+    results = {}
+    for compilerClass in CROSSCOMPILERS:
+        
+        xc = compilerClass(prog)
+        print(expt.fulltype(xc))
+        # compile everything
+        for mode in trainData.modesToLearn():
+          xc.ensureCompiled(mode)
+        learner = CROSSLEARNERS[compilerClass](prog,xc)
+        
+        params = {'prog':prog,
+                  'trainData':trainData, 'testData':testData,
+                  'savedTestPredictions':'tmp-cache/test.%s.solutions.txt' % expt.fulltype(xc),
+                  'learner':learner,
+        }
+        
+        results[expt.fulltype(xc)] = expt.Expt(params).run()
+    return results
 
 def runMain():
     if not os.path.exists("tmp-cache"): os.mkdir("tmp-cache")
@@ -234,9 +234,9 @@ def runMain():
         trainData = dataset.Dataset.loadExamples(prog.db,trainFile)
         testData = dataset.Dataset.loadExamples(prog.db,testFile)
         print(accExpt(prog,trainData,testData,n,maxD,epochs))
-	print("\n".join(["%s: %s" % i for i in list(xc_accExpt(prog,trainData,testData,n,maxD,epochs).items())]))
-        if VISUALIZE and NETWORKX:
-            visualizeLearned(db,n)
+    print("\n".join(["%s: %s" % i for i in list(xc_accExpt(prog,trainData,testData,n,maxD,epochs).items())]))
+    if VISUALIZE and NETWORKX:
+        visualizeLearned(db,n)
     else:
         assert False,'bad goal %s' % goal
 
